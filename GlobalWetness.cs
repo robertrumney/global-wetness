@@ -4,19 +4,27 @@ using System.Collections;
 public class GlobalWetness : MonoBehaviour
 {
     [Header("Configuration")]
-    public LayerMask layerMask; // Layers to apply wetness
+    // Layers to apply wetness
+    public LayerMask layerMask; 
     public bool activated = true;
 
+    // Default smoothness
     [Range(0f, 1f)]
-    public float initialGlossiness = 1.0f; // Default smoothness
+    public float initialGlossiness = 1.0f; 
+
+    // Target smoothness for transition
     [Range(0f, 1f)]
-    public float targetGlossiness = 0.0f; // Target smoothness for transition
-    public float interpolationDuration = 5.0f; // Duration of smoothness transition in seconds
+    public float targetGlossiness = 0.0f; 
+
+    // Duration of smoothness transition in seconds
+    public float interpolationDuration = 5.0f; 
 
     private void Awake()
     {
         if (!activated) return;
-        ApplyGlossiness(initialGlossiness); // Apply initial smoothness on startup
+
+        // Apply initial smoothness on startup
+        ApplyGlossiness(initialGlossiness); 
     }
 
     public void TriggerInterpolationToTarget(float newTargetGlossiness)
@@ -26,13 +34,17 @@ public class GlobalWetness : MonoBehaviour
 
     public void ResetGlossiness()
     {
-        StopAllCoroutines(); // Stop any ongoing interpolation
-        ApplyGlossiness(initialGlossiness); // Revert to initial smoothness
+        // Stop any ongoing interpolation
+        StopAllCoroutines();
+
+        // Revert to initial smoothness
+        ApplyGlossiness(initialGlossiness); 
     }
 
     private void ApplyGlossiness(float glossiness)
     {
         MeshRenderer[] renderers = FindObjectsOfType<MeshRenderer>();
+
         foreach (MeshRenderer renderer in renderers)
         {
             if (((1 << renderer.gameObject.layer) & layerMask) != 0)
@@ -71,10 +83,12 @@ public class GlobalWetness : MonoBehaviour
                     }
                 }
             }
+
             time += Time.deltaTime;
             yield return null;
         }
 
-        ApplyGlossiness(targetGlossiness); // Ensure final value is set
+        // Ensure final value is set
+        ApplyGlossiness(targetGlossiness); 
     }
 }
